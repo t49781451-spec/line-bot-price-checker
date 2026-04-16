@@ -163,7 +163,7 @@ def handle_image_message(event):
 
         # Claude Vision APIで商品名と価格を抽出
         claude_response = anthropic_client.messages.create(
-            model='claude-opus-4-5',
+            model='claude-3-5-sonnet-20241022',
             max_tokens=3000,
             messages=[
                 {
@@ -270,8 +270,11 @@ def handle_image_message(event):
         print(f"JSON parse error: {e}")
         push_message(user_id, "❌ AIの返答を解析できませんでした。\nもう一度送信してください。")
     except Exception as e:
-        print(f"Error: {traceback.format_exc()}")
-        push_message(user_id, f"❌ エラーが発生しました。\nもう一度お試しください。")
+        error_detail = traceback.format_exc()
+        print(f"Error: {error_detail}")
+        # エラーの種類をユーザーに通知
+        error_short = str(e)[:150]
+        push_message(user_id, f"❌ エラーが発生しました。\n詳細: {error_short}")
 
 
 # ===== テキストメッセージ処理 =====
