@@ -3,7 +3,9 @@ import json
 import base64
 import re
 import traceback
+import io
 from flask import Flask, request, abort
+from PIL import Image
 
 # LINE SDK v3
 from linebot.v3 import WebhookHandler
@@ -153,13 +155,28 @@ def handle_image_message(event):
             blob_api = MessagingApiBlob(api_client)
             image_data = blob_api.get_message_content(message_id)
 
+        # 画像を圧縮（大きすぎるとAPIエラーになるため）
+        try:
+            img = Image.open(io.BytesIO(image_data))
+            # 最大1600px以内にリサイズ
+            max_size = 1600
+            if img.width > max_size or img.height > max_size:
+                img.thumbnail((max_size, max_size), Image.LANCZOS)
+            # JPEG形式で圧縮
+            output = io.BytesIO()
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+            img.save(output, format='JPEG', quality=85)
+            image_data = output.getvalue()
+            print(f"画像圧縮完了: {len(image_data)} bytes")
+        except Exception as img_err:
+            print(f"画像圧縮スキップ: {img_err}")
+
         # base64エンコード
         image_base64 = base64.standard_b64encode(image_data).decode('utf-8')
 
-        # 画像タイプ判定
+        # 画像タイプ判定（圧縮後はJPEG）
         media_type = 'image/jpeg'
-        if image_data[:4] == b'\x89PNG':
-            media_type = 'image/png'
 
         # Claude Vision APIで商品名と価格を抽出
         claude_response = anthropic_client.messages.create(
