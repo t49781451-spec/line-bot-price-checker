@@ -36,10 +36,7 @@ LINE_CHANNEL_ACCESS_TOKEN = os.environ.get(
     'LINE_CHANNEL_ACCESS_TOKEN',
     'oDIr4S9ApUh7pMoBr8ysJBhWLD3WWmFAWguITuDIoCY9ald3pTL4Kow3nGEyo7YZ/QXlC2GGsbFXaFKUhH7JhHCE+0yd63V4d0n7PE1M2KtQ3E0cfgCTwib6V9R1dzpZpAvyuCN8nh414PZpOcCi6wdB04t89/1O/w1cDnyilFU='
 )
-ANTHROPIC_API_KEY = os.environ.get(
-    'ANTHROPIC_API_KEY',
-    'sk-ant-api03-TjFR2elq13b_msmoXlGylz3pyEVfJ_BpGBW0DA9xiyx15FJr-KSdyhjGb2GJPaM41eYGRCDp0y3ZhIEgRHb4Uw-4bNgYAAA'
-)
+ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
 
 # LINE SDK 設定
 configuration = Configuration(access_token=LINE_CHANNEL_ACCESS_TOKEN)
