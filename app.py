@@ -177,7 +177,7 @@ def handle_image_message(event):
 
         # Claude Vision APIで商品名と価格を抽出
         claude_response = anthropic_client.messages.create(
-            model='claude-3-5-sonnet-20241022',
+            model='claude-3-5-haiku-20241022',
             max_tokens=3000,
             messages=[
                 {
